@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { signup, changeLanguage } from "../api/apiCalls";
+import { signup } from "../api/apiCalls";
 import Input from "../components/Input";
 import { withTranslation } from "react-i18next";
 
@@ -69,20 +69,13 @@ class UserSignupPage extends Component {
     //   });
   };
 
-  onChangeLanguage = (language) => {
-    const { i18n } = this.props;
-    i18n.changeLanguage(language);
-
-    changeLanguage(language);
-  };
-
   render() {
     const { pendingApiCall, errors } = this.state;
     const { username, displayName, password, passwordRepeat } = errors;
     const { t } = this.props;
 
     return (
-      <div className="container w-50">
+      <div className="container">
         <form>
           <h1 className="text-center">{t("Sign Up")}</h1>
           <Input
@@ -122,24 +115,6 @@ class UserSignupPage extends Component {
               )}{" "}
               {t("Sign Up")}
             </button>
-          </div>
-          <div>
-            <img
-              src="https://www.countryflags.io/tr/flat/24.png"
-              alt="Turkish Flag"
-              onClick={() => {
-                this.onChangeLanguage("tr");
-              }}
-              style={{cursor: "pointer"}}
-            ></img>
-            <img
-              src="https://www.countryflags.io/us/flat/24.png"
-              alt="USA Flag"
-              onClick={() => {
-                this.onChangeLanguage("en");
-              }}
-              style={{cursor: "pointer"}}
-            ></img>
           </div>
         </form>
       </div>

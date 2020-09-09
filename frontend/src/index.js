@@ -3,14 +3,17 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import UserSignupPage from "./pages/UserSignupPage";
+import LoginPage from "./pages/LoginPage";
+import LanguageSelector from "./components/LanguageSelector";
 import * as serviceWorker from "./serviceWorker";
 import "./bootstrap-override.scss";
 import "./i18n";
 
 ReactDOM.render(
-  <React.StrictMode>
+  <div className="container w-50">
     <UserSignupPage />
-  </React.StrictMode>,
+    <LanguageSelector />
+  </div>,
   document.getElementById("root")
 );
 
