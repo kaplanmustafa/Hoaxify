@@ -1,6 +1,5 @@
 package com.hoaxify.ws.user;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +12,9 @@ public class UserService {
 	PasswordEncoder passwordEncoder;
 	
 	//@Autowired --> Birden fazla constructor olmadığı için Autowired'a gerek yok
-	public UserService(UserRepository userRepository) {
+	public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
 		this.userRepository = userRepository;
-		this.passwordEncoder = new BCryptPasswordEncoder();
+		this.passwordEncoder = passwordEncoder;
 	}
 
 	public void save(User user) {

@@ -11,7 +11,7 @@ import "./i18n";
 
 ReactDOM.render(
   <div className="container w-50">
-    <UserSignupPage />
+    <LoginPage />
     <LanguageSelector />
   </div>,
   document.getElementById("root")
