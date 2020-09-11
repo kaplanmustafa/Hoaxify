@@ -1,6 +1,7 @@
 package com.hoaxify.ws.user;
 
-import javax.persistence.Column;
+import java.util.Collection;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -8,7 +9,10 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import com.fasterxml.jackson.annotation.JsonView;
 import com.hoaxify.ws.shared.Views;
 
@@ -16,7 +20,12 @@ import lombok.Data;
 
 @Data //Lombok ile getter setter vb. oluşturulur
 @Entity
-public class User {
+public class User implements UserDetails{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8421768845853099274L;
 
 	@Id
 	@GeneratedValue
@@ -41,4 +50,24 @@ public class User {
 	
 	@JsonView(Views.Base.class)
 	private String image;
+
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return AuthorityUtils.createAuthorityList("Role_user");
+	}
+
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	public boolean isEnabled() {
+		return true;
+	}
 }
