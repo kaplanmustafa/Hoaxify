@@ -3,6 +3,7 @@ import { signup } from "../api/apiCalls";
 import Input from "../components/Input";
 import { withTranslation } from "react-i18next";
 import ButtonWithProgress from "../components/ButtonWithProgress";
+import { withApiProgress } from "../shared/ApiProgress";
 
 class UserSignupPage extends Component {
   state = {
@@ -10,7 +11,6 @@ class UserSignupPage extends Component {
     displayName: null,
     password: null,
     passwordRepeat: null,
-    pendingApiCall: false,
     errors: {},
   };
 
@@ -47,8 +47,6 @@ class UserSignupPage extends Component {
       passwordRepeat,
     };
 
-    this.setState({ pendingApiCall: true });
-
     try {
       const response = await signup(body); // async ve await ile signup işlemi tamamlandıktan sonra alt satıra geçer
     } catch (error) {
@@ -58,22 +56,12 @@ class UserSignupPage extends Component {
         });
       }
     }
-
-    this.setState({ pendingApiCall: false });
-
-    // signup(body)
-    //   .then((response) => {
-    //     this.setState({ pendingApiCall: false });
-    //   })
-    //   .catch((error) => {
-    //     this.setState({ pendingApiCall: false });
-    //   });
   };
 
   render() {
-    const { pendingApiCall, errors } = this.state;
+    const { errors } = this.state;
     const { username, displayName, password, passwordRepeat } = errors;
-    const { t } = this.props;
+    const { t, pendingApiCall } = this.props;
 
     return (
       <div className="container">
@@ -110,7 +98,7 @@ class UserSignupPage extends Component {
               disabled={pendingApiCall || passwordRepeat !== undefined}
               onClick={this.onClickSignup}
               pendingApiCall={pendingApiCall}
-              text={t(" Sign Up")}
+              text={t("Sign Up")}
             ></ButtonWithProgress>
           </div>
         </form>
@@ -119,4 +107,13 @@ class UserSignupPage extends Component {
   }
 }
 
-export default withTranslation()(UserSignupPage);
+// Higher Order Component --> withTranslation ve withApiProgress
+const UserSignupPageWithApiProgress = withApiProgress(
+  UserSignupPage,
+  "/api/1.0/users"
+);
+const UserSignupPageWithTranslation = withTranslation()(
+  UserSignupPageWithApiProgress
+);
+
+export default UserSignupPageWithTranslation;
