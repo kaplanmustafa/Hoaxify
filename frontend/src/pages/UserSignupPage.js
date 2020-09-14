@@ -64,7 +64,7 @@ class UserSignupPage extends Component {
     const { t, pendingApiCall } = this.props;
 
     return (
-      <div className="container">
+      <div className="container w-50">
         <form>
           <h1 className="text-center">{t("Sign Up")}</h1>
           <Input

@@ -39,8 +39,11 @@ class LoginPage extends Component {
       error: null,
     });
 
+    const { push } = this.props.history;
+
     try {
       await login(creds);
+      push("/"); // Giriş başarılıysa home'a yönlendir
     } catch (apiError) {
       this.setState({
         error: apiError.response.data.message,
@@ -54,7 +57,7 @@ class LoginPage extends Component {
     const buttonEnabled = username && password; // 2 değerin varlığına göre buttonEnabled'a true veya false atar
 
     return (
-      <div className="container">
+      <div className="container w-50">
         <form>
           <h1 className="text-center">{t("Login")}</h1>
           <Input
