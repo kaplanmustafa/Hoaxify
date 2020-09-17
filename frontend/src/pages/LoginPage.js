@@ -4,11 +4,10 @@ import { withTranslation } from "react-i18next";
 import { login } from "../api/apiCalls";
 import ButtonWithProgress from "../components/ButtonWithProgress";
 import { withApiProgress } from "../shared/ApiProgress";
-import { Authentication } from "../shared/AuthenticationContext";
+import { connect } from "react-redux";
+import { loginSuccess } from "../redux/authActions";
 
 class LoginPage extends Component {
-  static contextType = Authentication;
-
   state = {
     username: null,
     password: null,
@@ -33,17 +32,17 @@ class LoginPage extends Component {
     event.preventDefault();
 
     const { username, password } = this.state;
-    const { onLoginSuccess } = this.context;
+
     const creds = {
       username,
       password,
     };
 
+    const { push } = this.props.history;
+
     this.setState({
       error: null,
     });
-
-    const { push } = this.props.history;
 
     try {
       const response = await login(creds);
@@ -54,7 +53,7 @@ class LoginPage extends Component {
         password,
       };
 
-      onLoginSuccess(authState);
+      this.props.onLoginSuccess(authState);
     } catch (apiError) {
       this.setState({
         error: apiError.response.data.message,
@@ -99,8 +98,17 @@ class LoginPage extends Component {
   }
 }
 
-// Higher Order Component --> withTranslation ve withApiProgress
-const LoginPageWithApiProgress = withApiProgress(LoginPage, "/api/1.0/auth");
-const LoginPageWithTranslation = withTranslation()(LoginPageWithApiProgress);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onLoginSuccess: (authState) => {
+      return dispatch(loginSuccess(authState));
+    },
+  };
+};
 
-export default LoginPageWithTranslation;
+// Higher Order Component --> withTranslation ve withApiProgress
+const LoginPageWithTranslation = withTranslation()(LoginPage);
+export default connect(
+  null,
+  mapDispatchToProps
+)(withApiProgress(LoginPageWithTranslation, "/api/1.0/auth"));

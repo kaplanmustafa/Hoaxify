@@ -5,12 +5,15 @@ import App from "./container/App";
 import * as serviceWorker from "./serviceWorker";
 import "./bootstrap-override.scss";
 import "./i18n";
-import AuthenticationContext from "./shared/AuthenticationContext";
+import { Provider } from "react-redux";
+import configureStore from "./redux/configureStore";
+
+const store = configureStore();
 
 ReactDOM.render(
-  <AuthenticationContext>
+  <Provider store={store}>
     <App />
-  </AuthenticationContext>,
+  </Provider>,
   document.getElementById("root")
 );
 

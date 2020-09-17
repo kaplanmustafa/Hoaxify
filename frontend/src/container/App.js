@@ -12,13 +12,11 @@ import {
   Switch,
 } from "react-router-dom";
 import TopBar from "../components/TopBar";
-import { Authentication } from "../shared/AuthenticationContext";
+import { connect } from "react-redux";
 
 class App extends Component {
-  static contextType = Authentication;
-
   render() {
-    const isLoggedIn = this.context.state.isLoggedIn;
+    const { isLoggedIn } = this.props;
 
     return (
       <div>
@@ -38,4 +36,10 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapStateToProps = (store) => {
+  return {
+    isLoggedIn: store.isLoggedIn,
+  };
+};
+
+export default connect(mapStateToProps)(App);
