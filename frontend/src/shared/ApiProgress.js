@@ -9,9 +9,6 @@ export function withApiProgress(WrappedComponent, apiPath) {
   return class extends Component {
     static displayName = `ApiProgress(${getDisplayName(WrappedComponent)})`;
 
-    // static displayName =
-    //   "ApiProgress(" + getDisplayName(WrappedComponent) + ")";
-
     state = {
       pendingApiCall: false,
     };
@@ -34,7 +31,8 @@ export function withApiProgress(WrappedComponent, apiPath) {
       );
     }
 
-    componentWillUnmount () { // Component ekrandan gidince çalışır
+    componentWillUnmount() {
+      // Component ekrandan gidince çalışır
       axios.interceptors.request.eject(this.requestInterceptor); // Interceptorları temizlemek için
       axios.interceptors.response.eject(this.responseInterceptor);
     }
@@ -46,19 +44,13 @@ export function withApiProgress(WrappedComponent, apiPath) {
     };
 
     render() {
-      const { pendingApiCall } = this.state;
-
-      // return (
-      //   <div>
-      //     {React.cloneElement(this.props.children, {
-      //       pendingApiCall,
-      //     })}
-      //   </div>
-      // );
+      const pendingApiCall =
+        this.state.pendingApiCall || this.props.pendingApiCall;
 
       return (
-        <WrappedComponent pendingApiCall={pendingApiCall} {...this.props} />
-      ); //... this.props --> alttaki compınente burdaki propsları paslar
+        <WrappedComponent {...this.props} pendingApiCall={pendingApiCall} />
+      ); //... this.props --> alttaki componente burdaki propsları gönderir (translation ile ilgili propslar) 
+      // Higher Order Componentde mutlaka üst componentlerden gelen propslar alta gönderilmelidir --> {...this.props}
     }
   };
 }

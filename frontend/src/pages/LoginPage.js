@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import Input from "../components/Input";
 import { withTranslation } from "react-i18next";
-import { login } from "../api/apiCalls";
 import ButtonWithProgress from "../components/ButtonWithProgress";
 import { withApiProgress } from "../shared/ApiProgress";
 import { connect } from "react-redux";
-import { loginSuccess } from "../redux/authActions";
+import { loginHandler } from "../redux/authActions";
 
 class LoginPage extends Component {
   state = {
@@ -38,22 +37,16 @@ class LoginPage extends Component {
       password,
     };
 
-    const { push } = this.props.history;
+    const { history, dispatch } = this.props;
+    const { push } = history;
 
     this.setState({
       error: null,
     });
 
     try {
-      const response = await login(creds);
+      await dispatch(loginHandler(creds));
       push("/"); // Giriş başarılıysa home'a yönlendir
-
-      const authState = {
-        ...response.data,
-        password,
-      };
-
-      this.props.onLoginSuccess(authState);
     } catch (apiError) {
       this.setState({
         error: apiError.response.data.message,
@@ -82,7 +75,7 @@ class LoginPage extends Component {
             type="password"
           />
           {this.state.error && (
-            <div className="alert alert-danger">{this.state.error}</div>
+            <div className="alert alert-danger">{error}</div>
           )}
           <div className="text-center">
             <ButtonWithProgress
@@ -98,17 +91,8 @@ class LoginPage extends Component {
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onLoginSuccess: (authState) => {
-      return dispatch(loginSuccess(authState));
-    },
-  };
-};
-
 // Higher Order Component --> withTranslation ve withApiProgress
 const LoginPageWithTranslation = withTranslation()(LoginPage);
-export default connect(
-  null,
-  mapDispatchToProps
-)(withApiProgress(LoginPageWithTranslation, "/api/1.0/auth"));
+export default connect()(
+  withApiProgress(LoginPageWithTranslation, "/api/1.0/auth")
+);

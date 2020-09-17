@@ -9,7 +9,7 @@ const Input = (props) => {
       <label>{label}</label>
       <input
         className={className}
-        name={props.name}
+        name={name}
         onChange={onChange}
         type={type}
       ></input>

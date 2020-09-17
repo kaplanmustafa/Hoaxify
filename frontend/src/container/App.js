@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import ApiProgress from "../shared/ApiProgress";
 import UserSignupPage from "../pages/UserSignupPage";
 import LoginPage from "../pages/LoginPage";
 import LanguageSelector from "../components/LanguageSelector";
