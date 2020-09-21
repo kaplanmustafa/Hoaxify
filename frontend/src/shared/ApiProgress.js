@@ -1,56 +1,49 @@
-import React, { Component } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
-function getDisplayName(WrappedComponent) {
-  return WrappedComponent.displayName || WrappedComponent.name || "Component";
-}
+export const useApiProgress = (apiPath) => {
+  const [pendingApiCall, setpendingApiCall] = useState(false);
 
-export function withApiProgress(WrappedComponent, apiPath) {
-  return class extends Component {
-    static displayName = `ApiProgress(${getDisplayName(WrappedComponent)})`;
+  // Neye göre değişeceği verilmezse componentDidMount çalışınca çalışır
+  useEffect(() => {
+    let requestInterceptor, responseInterceptor;
 
-    state = {
-      pendingApiCall: false,
-    };
-
-    componentDidMount() {
-      this.requestInterceptor = axios.interceptors.request.use((request) => {
-        this.updateApiCallFor(request.url, true);
-        return request;
-      });
-
-      this.responseInterceptor = axios.interceptors.response.use(
-        (response) => {
-          this.updateApiCallFor(response.config.url, false);
-          return response;
-        },
-        (error) => {
-          this.updateApiCallFor(error.config.url, false);
-          throw error;
-        }
-      );
-    }
-
-    componentWillUnmount() {
-      // Component ekrandan gidince çalışır
-      axios.interceptors.request.eject(this.requestInterceptor); // Interceptorları temizlemek için
-      axios.interceptors.response.eject(this.responseInterceptor);
-    }
-
-    updateApiCallFor = (url, inProgress) => {
+    const updateApiCallFor = (url, inProgress) => {
       if (url === apiPath) {
-        this.setState({ pendingApiCall: inProgress });
+        setpendingApiCall(inProgress);
       }
     };
 
-    render() {
-      const pendingApiCall =
-        this.state.pendingApiCall || this.props.pendingApiCall;
+    const registerInterceptors = () => {
+      requestInterceptor = axios.interceptors.request.use((request) => {
+        updateApiCallFor(request.url, true);
+        return request;
+      });
 
-      return (
-        <WrappedComponent {...this.props} pendingApiCall={pendingApiCall} />
-      ); //... this.props --> alttaki componente burdaki propsları gönderir (translation ile ilgili propslar) 
-      // Higher Order Componentde mutlaka üst componentlerden gelen propslar alta gönderilmelidir --> {...this.props}
-    }
-  };
-}
+      responseInterceptor = axios.interceptors.response.use(
+        (response) => {
+          updateApiCallFor(response.config.url, false);
+          return response;
+        },
+        (error) => {
+          updateApiCallFor(error.config.url, false);
+          throw error;
+        }
+      );
+    };
+
+    const unregisterInterceptors = () => {
+      axios.interceptors.request.eject(requestInterceptor); // Interceptorları temizlemek için
+      axios.interceptors.response.eject(responseInterceptor);
+    };
+
+    registerInterceptors();
+
+    // Component unmount olunca çalışır
+    return function unmount() {
+      unregisterInterceptors();
+    };
+  });
+
+  return pendingApiCall;
+};
