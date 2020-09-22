@@ -24,6 +24,7 @@ export const loginHandler = (credentials) => {
     };
 
     dispatch(loginSuccess(authState));
+
     return response;
   };
 };

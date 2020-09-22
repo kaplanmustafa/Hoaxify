@@ -13,9 +13,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.fasterxml.jackson.annotation.JsonView;
-import com.hoaxify.ws.shared.Views;
-
 import lombok.Data;
 
 @Data //Lombok ile getter setter vb. oluşturulur
@@ -34,12 +31,10 @@ public class User implements UserDetails{
 	@NotNull(message = "{hoaxify.constraints.username.NotNull.message}")
 	@Size(min = 4, max= 15)
 	@UniqueUsername
-	@JsonView(Views.Base.class)
 	private String username;
 	
 	@NotNull
 	@Size(min = 4, max= 15)
-	@JsonView(Views.Base.class)
 	private String displayName;
 	
 	@NotNull
@@ -48,7 +43,6 @@ public class User implements UserDetails{
 	message = "{hoaxify.constraints.username.Pattern.message}")
 	private String password;
 	
-	@JsonView(Views.Base.class)
 	private String image;
 
 	public Collection<? extends GrantedAuthority> getAuthorities() {

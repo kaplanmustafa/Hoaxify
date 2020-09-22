@@ -1,40 +1,90 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import { getUsers } from "../api/apiCalls";
-import { withTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
+import UserListItem from "./UserListItem";
+import { useApiProgress } from "../shared/ApiProgress";
 
-class UserList extends Component {
-  state = {
-    users: [],
+const UserList = (props) => {
+  const [page, setPage] = useState({
+    content: [],
+    size: 3,
+    number: 0,
+  });
+
+  const [loadFailure, setLoadFailure] = useState(false);
+
+  const pendingApiCall = useApiProgress("/api/1.0/users?page");
+
+  useEffect(() => {
+    loadUsers();
+  }, []); // --> array boş olursa sadece componentDidMount çalışır
+
+  const onClickNext = () => {
+    const nextPage = page.number + 1;
+    loadUsers(nextPage);
   };
 
-  componentDidMount() {
-    getUsers().then((response) => {
-      this.setState({
-        users: response.data,
-      });
-    });
-  }
+  const onClickPrevious = () => {
+    const previousPage = page.number - 1;
+    loadUsers(previousPage);
+  };
 
-  render() {
-    const { t } = this.props;
-    const { users } = this.state;
+  const loadUsers = async (page) => {
+    setLoadFailure(false);
 
-    return (
-      <div className="card">
-        <h3 className="card-header text-center">{t("Users")}</h3>
-        <div className="list-group-flush">
-          {users.map((user, index) => (
-            <div
-              className="list-group-item list-group-item-action"
-              key={user.username}
-            >
-              {user.username}
-            </div>
-          ))}
+    try {
+      const response = await getUsers(page);
+      setPage(response.data);
+    } catch (error) {
+      setLoadFailure(true);
+    }
+  };
+
+  const { t } = useTranslation();
+  const { content: users, first, last } = page;
+
+  let actionDiv = (
+    <div>
+      {first === false && (
+        <button className="btn btn-sm btn-light" onClick={onClickPrevious}>
+          {t("Previous")}
+        </button>
+      )}
+      {last === false && (
+        <button
+          className="btn btn-sm btn-light float-right"
+          onClick={onClickNext}
+        >
+          {t("Next")}
+        </button>
+      )}
+    </div>
+  );
+
+  if (pendingApiCall) {
+    actionDiv = (
+      <div className="d-flex justify-content-center">
+        <div className="spinner-border text-black-50">
+          <span className="sr-only">Loading...</span>
         </div>
       </div>
     );
   }
-}
 
-export default withTranslation()(UserList);
+  return (
+    <div className="card">
+      <h3 className="card-header text-center">{t("Users")}</h3>
+      <div className="list-group-flush">
+        {users.map((user) => (
+          <UserListItem key={user.username} user={user} />
+        ))}
+      </div>
+      {actionDiv}
+      {loadFailure && (
+        <div className="text-center text-danger">{t("Load Failure")}</div>
+      )}
+    </div>
+  );
+};
+
+export default UserList;

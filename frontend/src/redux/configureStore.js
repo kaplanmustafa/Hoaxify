@@ -2,6 +2,7 @@ import { createStore, applyMiddleware, compose } from "redux";
 import authReducer from "./authReducer";
 import SecureLS from "secure-ls";
 import thunk from "redux-thunk";
+import { setAuthorizationHeader } from "../api/apiCalls";
 
 const secureLS = new SecureLS();
 
@@ -28,6 +29,9 @@ const updateStateInStorage = (newState) => {
 };
 
 const configureStore = () => {
+  const initialState = getStateFromStorage();
+  setAuthorizationHeader(initialState);
+
   const composeEnhancers =
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -40,6 +44,7 @@ const configureStore = () => {
   // store'da her değişim olduğunda bu fonksiyon çalışacak
   store.subscribe(() => {
     updateStateInStorage(store.getState());
+    setAuthorizationHeader(store.getState());
   });
 
   return store;
