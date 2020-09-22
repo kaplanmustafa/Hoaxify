@@ -13,3 +13,8 @@ spring:
         persistence:
           validation:
             mode: none
+  data:
+    web:
+      pageable:
+        default-page-size: 10
+        max-page-size: 100

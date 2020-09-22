@@ -42,7 +42,6 @@ const LoginPage = (props) => {
   const { t } = useTranslation();
 
   const pendingApiCall = useApiProgress("/api/1.0/auth");
-
   const buttonEnabled = username && password; // 2 değerin varlığına göre buttonEnabled'a true veya false atar
 
   return (

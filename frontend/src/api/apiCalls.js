@@ -13,3 +13,7 @@ export const login = (creds) => {
 export const changeLanguage = (language) => {
   axios.defaults.headers["accept-language"] = language;
 };
+
+export const getUsers = () => {
+  return axios.get("/api/1.0/users");
+};
