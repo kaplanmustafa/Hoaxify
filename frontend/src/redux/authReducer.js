@@ -17,6 +17,12 @@ const authReducer = (state = { ...defaultState }, action) => {
       ...action.payload,
       isLoggedIn: true,
     };
+  } else if (action.type === ACTIONS.UPDATE_SUCCESS) {
+    return {
+      ...state,
+      ...action.payload,
+      // ...action.payload --> displayName: action.payload.displayName, image: action.payload.image
+    };
   }
   return state;
 };

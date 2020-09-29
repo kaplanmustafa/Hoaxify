@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ProfileImageWithDefault from "./ProfileImageWithDefault";
 import Input from "./Input";
 import { updateUser } from "../api/apiCalls";
 import { useApiProgress } from "../shared/ApiProgress";
 import ButtonWithProgress from "./ButtonWithProgress";
 import { useParams } from "react-router-dom";
+import { updateSuccess } from "../redux/authActions";
 
 const ProfileCard = (props) => {
   const [inEditMode, setInEditMode] = useState(false);
@@ -16,6 +17,7 @@ const ProfileCard = (props) => {
   const [newImage, setNewImage] = useState();
   const [validationErrors, setValidationErrors] = useState({});
 
+  const dispatch = useDispatch();
   const routeParams = useParams();
   const pathUsername = routeParams.username;
 
@@ -39,6 +41,15 @@ const ProfileCard = (props) => {
       };
     });
   }, [updatedDisplayName]);
+
+  useEffect(() => {
+    setValidationErrors((previousValidationErrors) => {
+      return {
+        ...previousValidationErrors,
+        image: undefined,
+      };
+    });
+  }, [newImage]);
 
   const { username, displayName, image } = user;
 
@@ -82,13 +93,14 @@ const ProfileCard = (props) => {
       const response = await updateUser(username, body);
       setInEditMode(false);
       setUser(response.data);
+      dispatch(updateSuccess(response.data));
     } catch (error) {
       setValidationErrors(error.response.data.validationErrors);
     }
   };
 
   const pendingApiCall = useApiProgress("put", "/api/1.0/users/" + username);
-  const { displayName: displayNameError } = validationErrors;
+  const { displayName: displayNameError, image: imageError } = validationErrors;
 
   return (
     <div className="card text-center">
@@ -129,11 +141,7 @@ const ProfileCard = (props) => {
               }}
               error={displayNameError}
             />
-            <input
-              type="file"
-              onChange={onChangeFile}
-              className="btn form-control-file"
-            />
+            <Input type="file" onChange={onChangeFile} error={imageError} />
             <div>
               <ButtonWithProgress
                 className="btn btn-primary d-inline-flex"

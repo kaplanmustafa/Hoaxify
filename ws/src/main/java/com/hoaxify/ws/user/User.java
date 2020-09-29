@@ -34,7 +34,7 @@ public class User implements UserDetails{
 	private String username;
 	
 	@NotNull
-	@Size(min = 4, max= 15)
+	@Size(min = 4, max= 255)
 	private String displayName;
 	
 	@NotNull
