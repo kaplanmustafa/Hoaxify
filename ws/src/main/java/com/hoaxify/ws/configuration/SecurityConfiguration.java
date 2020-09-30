@@ -22,8 +22,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable();
-		
 		http.httpBasic().authenticationEntryPoint(new AuthEntryPoint()); // İstenmeyen popup için
+		
+		http.headers().frameOptions().disable(); // h2 consol frame engellemeyi kaldır
 		
 		http
 			.authorizeRequests()
