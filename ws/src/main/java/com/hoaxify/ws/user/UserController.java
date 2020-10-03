@@ -1,7 +1,5 @@
 package com.hoaxify.ws.user;
 
-import java.util.function.Function;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,12 +34,7 @@ public class UserController {
 	
 	@GetMapping("/users")
 	Page<UserVM> getUsers(Pageable page, @CurrentUser User user) { // map --> User'ı UserVM'e çevirir
-		return userService.getUsers(page, user).map(new Function<User, UserVM>() {
-
-			public UserVM apply(User user) {
-				return new UserVM(user);
-			}
-		});
+		return userService.getUsers(page, user).map(UserVM::new);
 	}
 	
 	@GetMapping("/users/{username}") 

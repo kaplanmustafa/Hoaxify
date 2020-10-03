@@ -12,7 +12,7 @@ const UserListItem = (props) => {
       className="list-group-item list-group-item-action"
     >
       <ProfileImageWithDefault
-        className="rounded-circle"
+        className="rounded-circle shadow"
         width="32"
         height="32"
         alt={`${username} profile`}
