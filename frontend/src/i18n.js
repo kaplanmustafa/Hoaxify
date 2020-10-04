@@ -26,7 +26,8 @@ i18n.use(initReactI18next).init({
         "My Profile": "My Profile",
         "Post Hoax...": "Post Hoax...",
         "There are no hoaxes": "There are no hoaxes",
-        "Load Old Hoaxes": "Load Old Hoaxes"
+        "Load Old Hoaxes": "Load Old Hoaxes",
+        "There are new hoaxes": "There are new hoaxes"
       }
     },
     tr: {
@@ -51,7 +52,8 @@ i18n.use(initReactI18next).init({
         "My Profile": "Hesabım",
         "Post Hoax...": "Hoax Paylaş...",
         "There are no hoaxes": "Hoax bulunamadı",
-        "Load Old Hoaxes": "Geçmiş Hoaxları Yükle"
+        "Load Old Hoaxes": "Geçmiş Hoaxları Yükle",
+        "There are new hoaxes": "Yeni Hoaxlar var"
       }
     }
   },
