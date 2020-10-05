@@ -6,6 +6,8 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
+import org.springframework.data.util.Streamable;
 import org.springframework.stereotype.Service;
 
 import com.hoaxify.ws.user.User;
@@ -58,5 +60,10 @@ public class HoaxService {
 
 	public List<Hoax> getNewHoaxesCount(long id, Sort sort) {
 		return hoaxRepository.findByIdGreaterThan(id, sort);
+	}
+
+	public List<Hoax> getNewHoaxesCountOfUser(long id, String username, Sort sort) {
+		User inDB = userService.getByUsername(username);
+		return hoaxRepository.findByIdGreaterThanAndUser(id, inDB, sort);
 	}
 }
