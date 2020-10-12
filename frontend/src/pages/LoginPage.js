@@ -45,7 +45,7 @@ const LoginPage = (props) => {
   const buttonEnabled = username && password; // 2 değerin varlığına göre buttonEnabled'a true veya false atar
 
   return (
-    <div className="container">
+    <div className="container w-25">
       <form>
         <h1 className="text-center">{t("Login")}</h1>
         <Input

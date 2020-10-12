@@ -68,7 +68,7 @@ const UserSignupPage = (props) => {
   }
 
   return (
-    <div className="container">
+    <div className="container w-25">
       <form>
         <h1 className="text-center">{t("Sign Up")}</h1>
         <Input
