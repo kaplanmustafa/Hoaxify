@@ -7,7 +7,7 @@ const ProfileImageWithDefault = (props) => {
   let imageSource = defaultPicture;
 
   if (image) {
-    imageSource = "/images/" + image;
+    imageSource = "/images/profile/" + image;
   }
 
   if (tempimage === "delete-profile-photo") {
