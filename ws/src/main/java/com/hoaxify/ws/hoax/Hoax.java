@@ -10,7 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.Size;
 
 import com.hoaxify.ws.user.User;
 
@@ -24,7 +23,6 @@ public class Hoax {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
-	@Size(min = 1, max = 1000) // Doğrulama için
 	@Column(length = 1000) // Boyut için
 	private String content;
 	
