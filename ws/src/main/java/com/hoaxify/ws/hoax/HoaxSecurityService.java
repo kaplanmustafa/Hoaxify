@@ -14,7 +14,7 @@ public class HoaxSecurityService {
 	HoaxRepository hoaxRepository;
 	
 	public boolean isAllowedToDelete(long id, User loggedInUser) {
-		Optional<Hoax> optionalHoax = hoaxRepository.findById(loggedInUser.getId());
+		Optional<Hoax> optionalHoax = hoaxRepository.findById(id);
 		if(!optionalHoax.isPresent()) {
 			return false;
 		}
