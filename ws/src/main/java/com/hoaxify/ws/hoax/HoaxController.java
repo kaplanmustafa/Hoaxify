@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -74,25 +75,9 @@ public class HoaxController {
 		return hoaxService.getHoaxesOfUser(username, page).map(HoaxVM::new);
 	}
 	
-//	@GetMapping("/users/{username}/hoaxes/{id:[0-9]+}")
-//	ResponseEntity<?> getUserHoaxesRelative(@PathVariable long id, @PathVariable String username, @PageableDefault(sort = "id", direction = Direction.DESC) Pageable page,
-//			@RequestParam(name = "count", required = false, defaultValue = "false") boolean count,
-//			@RequestParam(name = "direction", defaultValue = "before") String direction) {
-//		
-//		if(count) {
-//			long newHoaxCount = hoaxService.getNewHoaxesCountOfUser(id, username);
-//			Map<String, Long> response = new HashMap<>();
-//			response.put("count", newHoaxCount);
-//			
-//			return ResponseEntity.ok(response);
-//		}
-//		
-//		if(direction.equals("after")) {
-//			List<HoaxVM> newHoaxes = hoaxService.getNewHoaxesCountOfUser(id, username, page.getSort())
-//					.stream().map(HoaxVM::new).collect(Collectors.toList());
-//			return ResponseEntity.ok(newHoaxes);
-//		}
-//		
-//		return ResponseEntity.ok(hoaxService.getOldHoaxesOfUser(id, username, page).map(HoaxVM::new));
-//	}
+	@DeleteMapping("/hoaxes/{id:[0-9]+}") 
+	GenericResponse deleteHoax(@PathVariable long id) {
+		hoaxService.delete(id);
+		return new GenericResponse("Hoax removed");
+	}
 }
