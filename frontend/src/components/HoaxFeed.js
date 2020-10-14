@@ -56,7 +56,7 @@ const HoaxFeed = () => {
       } catch (error) {}
     };
 
-    let looper = setInterval(getCount, 2000);
+    let looper = setInterval(getCount, 5000);
 
     return function cleanup() {
       clearInterval(looper);
