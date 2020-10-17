@@ -35,6 +35,6 @@ public class Hoax {
 	@ManyToOne
 	private User user;
 	
-	@OneToOne(mappedBy = "hoax", cascade = CascadeType.REMOVE) 
+	@OneToOne(mappedBy = "hoax", cascade = CascadeType.REMOVE) // mappedBy = "hoax" --> foreign key
 	private FileAttachment fileAttachment;
 }
