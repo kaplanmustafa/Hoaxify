@@ -21,6 +21,7 @@ const ProfileImageWithDefault = (props) => {
       onError={(event) => {
         event.target.src = defaultPicture;
       }}
+      alt="user-profile-img"
     />
   );
 };
