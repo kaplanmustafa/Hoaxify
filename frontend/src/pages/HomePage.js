@@ -12,7 +12,7 @@ const HomePage = () => {
   return (
     <div className="container">
       <div className="row">
-        <div className="col">
+        <div className="col-7">
           {isLoggedIn && (
             <div className="mb-1">
               <HoaxSubmit />
@@ -20,7 +20,7 @@ const HomePage = () => {
           )}
           <HoaxFeed />
         </div>
-        <div className="col">
+        <div className="col-5">
           <UserList />
         </div>
       </div>
