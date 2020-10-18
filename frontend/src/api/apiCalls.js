@@ -7,7 +7,7 @@ export const signup = (body) => {
 };
 
 export const login = (creds) => {
-  return axios.post("/api/1.0/auth", {}, { auth: creds });
+  return axios.post("/api/1.0/auth", creds);
 };
 
 export const changeLanguage = (language) => {
@@ -18,9 +18,9 @@ export const getUsers = (page = 0, size = 3) => {
   return axios.get(`/api/1.0/users?page=${page}&size=${size}`);
 };
 
-export const setAuthorizationHeader = ({ username, password, isLoggedIn }) => {
+export const setAuthorizationHeader = ({ token, isLoggedIn }) => {
   if (isLoggedIn) {
-    const authorizationHeaderValue = `Basic ${btoa(username + ":" + password)}`; // btoa --> içerisindeki stringi base64'e çevirir
+    const authorizationHeaderValue = `Bearer ${token}`;
     axios.defaults.headers["Authorization"] = authorizationHeaderValue;
   } else {
     delete axios.defaults.headers["Authorization"];
