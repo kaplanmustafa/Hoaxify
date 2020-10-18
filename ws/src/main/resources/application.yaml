@@ -26,5 +26,10 @@ hoaxify:
 ---
 spring:
   profiles: dev
+  datasource:
+    url: jdbc:h2:./devdb
+  jpa:
+    hibernate:
+      ddl-auto: update
 hoaxify:
   upload-path: storage-dev

@@ -22,6 +22,9 @@ public class WsApplication {
 	@Profile("dev") // Bu işlem sadece dev profilindeyken çalışsın
 	CommandLineRunner createInitialUsers(UserService userService, HoaxService hoaxService) {
 		return(args) -> {
+			try {
+				userService.getByUsername("user1");
+			} catch (Exception e) {
 				for(int i=1; i<=25; i++) {
 					User user = new User();
 					user.setUsername("user" + i);
@@ -35,6 +38,7 @@ public class WsApplication {
 						hoaxService.save(hoax, user);
 					}
 				}
+			}
 		};
 	}
 }

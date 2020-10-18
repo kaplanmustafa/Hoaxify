@@ -144,3 +144,6 @@ DELETE FROM USER WHERE ID="5" [42122-200]
 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
 	at java.lang.Thread.run(Unknown Source)
+2020-10-18 22:36:08 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "DROP TABLE TOKEN USER[*]"; SQL statement:
+drop table TOKEN USER [42000-200]
