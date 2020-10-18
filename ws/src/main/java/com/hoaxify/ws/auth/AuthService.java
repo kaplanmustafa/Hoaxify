@@ -1,8 +1,10 @@
 package com.hoaxify.ws.auth;
 
+import java.util.Optional;
+import java.util.UUID;
+
 import javax.transaction.Transactional;
 
-import org.hibernate.proxy.HibernateProxy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -11,21 +13,18 @@ import com.hoaxify.ws.user.User;
 import com.hoaxify.ws.user.UserRepository;
 import com.hoaxify.ws.user.vm.UserVM;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtParser;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-
 @Service
 public class AuthService {
 
 	UserRepository userRepository;
 	PasswordEncoder passwordEncoder;
+	TokenRepository tokenRepository;
 	
-	public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+	public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, TokenRepository tokenRepository) {
 		super();
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
+		this.tokenRepository = tokenRepository;
 	}
 
 	public AuthResponse authenticate(Credentials credentials) {
@@ -41,7 +40,12 @@ public class AuthService {
 		}
 		
 		UserVM userVM = new UserVM(inDB);
-		String token = Jwts.builder().setSubject("" + inDB.getId()).signWith(SignatureAlgorithm.HS512, "my-app-secret").compact();
+		String token = generateRandomToken();
+		
+		Token tokenEntity = new Token();
+		tokenEntity.setToken(token);
+		tokenEntity.setUser(inDB);
+		tokenRepository.save(tokenEntity);
 		
 		AuthResponse response = new AuthResponse();
 		response.setToken(token);
@@ -51,21 +55,16 @@ public class AuthService {
 
 	@Transactional
 	public UserDetails getUserDetails(String token) {
-		JwtParser parser = Jwts.parser().setSigningKey("my-app-secret");
-		
-		try {
-			parser.parse(token);
-			Claims claims = parser.parseClaimsJws(token).getBody();
-			long userId = new Long(claims.getSubject());
-			User user = userRepository.getOne(userId);
-			User actualUser = (User)((HibernateProxy)user).getHibernateLazyInitializer().getImplementation();
-			
-			return actualUser;
-		} catch (Exception e) {
-			e.printStackTrace();
+		Optional<Token> optionalToken = tokenRepository.findById(token);
+		if(!optionalToken.isPresent()) {
+			return null;
 		}
 		
-		return null;
+		return optionalToken.get().getUser();
+	}
+	
+	public String generateRandomToken() {
+		return UUID.randomUUID().toString().replaceAll("-", "");
 	}
 
 }
