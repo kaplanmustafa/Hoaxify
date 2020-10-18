@@ -1,9 +1,15 @@
 import * as ACTIONS from "./Constants";
-import { login, signup } from "../api/apiCalls";
+import { login, signup, logout } from "../api/apiCalls";
 
 export const logoutSuccess = () => {
-  return {
-    type: ACTIONS.LOGOUT_SUCCESS,
+  return async function (dispatch) {
+    try {
+      await logout();
+    } catch (error) {}
+
+    dispatch({
+      type: ACTIONS.LOGOUT_SUCCESS,
+    });
   };
 };
 
@@ -31,7 +37,7 @@ export const loginHandler = (credentials) => {
     const authState = {
       ...response.data.user,
       password: credentials.password,
-      token: response.data.token
+      token: response.data.token,
     };
 
     dispatch(loginSuccess(authState));
