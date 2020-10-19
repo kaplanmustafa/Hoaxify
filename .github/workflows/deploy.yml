@@ -35,13 +35,10 @@ jobs:
       working-directory: ./ws
       
     - name: SFTP Deploy
-      # You may pin to the exact commit or the version.
-      # uses: wlixcc/SFTP-Deploy-Action@fe288f8e0f466f9567fb3e54434b41800cc7b880
       uses: wlixcc/SFTP-Deploy-Action@v1.0
       with:
         username: ${{secrets.USERNAME}}
         server: ${{secrets.IP}}
-        # your sftp server port, default to 22
         ssh_private_key: ${{secrets.SSH}}
         local_path: ws/target/ws-0.0.1-SNAPSHOT.jar
-        remote_path: home/mustafakaplantx
+        remote_path: /home/mustafakaplantx
